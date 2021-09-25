@@ -40,9 +40,6 @@ export const Meetings: React.FC<RouteComponentProps> = () => {
       bringInUsers();
     }
 
-    return () => {
-      clearAll();
-    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, bringInUsers]);
   

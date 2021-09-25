@@ -60,7 +60,8 @@ const reducer = (state: typeof initialState, action: Action) => {
       return { ...state, meetings: remainingMeetings };
 
     case "CLEAR":
-      return { ...state, showForm: false};
+      state = initialState
+      return state;
 
     default:
       return state;
