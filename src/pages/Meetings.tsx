@@ -18,7 +18,7 @@ import { CreateMeeting } from "./CreateMeeting";
 
 export const Meetings: React.FC<RouteComponentProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { state, dispatch, bringInUsers, clearAll } = useMeet();
+  const { state, dispatch, bringInUsers } = useMeet();
 
   useEffect(() => {
     const getMeetings = async () => {
