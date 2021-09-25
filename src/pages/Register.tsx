@@ -22,10 +22,11 @@ export const Register: React.FC<RouteComponentProps> = () => {
       setLoading(false)
     } catch (error: any) {
       setLoading(false)
-      setError(error?.response.message);
+      setError(error?.message);
       setTimeout(() => setError(""), 4000);
     }
   };
+
 
   const {pathname} = useLocation();
 

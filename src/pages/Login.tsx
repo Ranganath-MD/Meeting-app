@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { EuiFieldText, EuiButton, EuiText } from "@elastic/eui";
+import { EuiFieldText, EuiButton, EuiText, EuiCallOut } from "@elastic/eui";
 import { ErrorMessage } from "components/ErrorMessage";
 import { RouteComponentProps, useLocation } from "@reach/router";
 import { useAuth } from "context";
@@ -8,6 +8,7 @@ import { useAuth } from "context";
 export const Login: React.FC<RouteComponentProps> = () => {
   const [loading, setLoading] = useState(false)
   const { login, navigateToDashBoard } = useAuth();
+  const [error, setError] = useState<string>("");
 
   const {
     formState: { errors },
@@ -26,17 +27,16 @@ export const Login: React.FC<RouteComponentProps> = () => {
     try {
       await login(data);
       setLoading(false)
-    } catch (error) {
+    } catch (error: any) {
+      setError(error?.message);
       setLoading(false)
+      setTimeout(() => setError(""), 4000);
     }
   };
 
-  console.log(loading)
-
   return (
     <Fragment>
-      <div
-        style={style.container}>
+      <div style={style.container}>
         <EuiText textAlign="center">
           <h1>Login</h1>
         </EuiText>
@@ -97,10 +97,20 @@ export const Login: React.FC<RouteComponentProps> = () => {
             color="primary"
             fullWidth
             isLoading={loading}
-            style={style.btn}>
+            style={style.btn}
+          >
             Login
           </EuiButton>
         </form>
+        {error && (
+          <EuiCallOut
+            title={error ? error : "Sorry, there was an error"}
+            color="danger"
+            size="s"
+            iconType="alert"
+            style={style.callout}
+          />
+        )}
       </div>
     </Fragment>
   );

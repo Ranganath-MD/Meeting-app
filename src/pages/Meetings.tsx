@@ -18,7 +18,7 @@ import { CreateMeeting } from "./CreateMeeting";
 
 export const Meetings: React.FC<RouteComponentProps> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { state, dispatch } = useMeet();
+  const { state, dispatch, bringInUsers, clearAll } = useMeet();
 
   useEffect(() => {
     const getMeetings = async () => {
@@ -34,8 +34,18 @@ export const Meetings: React.FC<RouteComponentProps> = () => {
         throw error;
       }
     };
-    getMeetings();
-  }, [dispatch]);
+
+    if (state.index === 0) {
+      getMeetings();
+      bringInUsers();
+    }
+
+    return () => {
+      clearAll();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, bringInUsers]);
+  
 
   return (
     <RenderPagesWithTabs>

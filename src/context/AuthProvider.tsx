@@ -1,5 +1,5 @@
 import { navigate } from "@reach/router";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import React, {
   createContext,
   useState,
@@ -33,9 +33,9 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (response) {
         navigate("/login");
       }
-    } catch (error) {
-      throw error;
-    }
+    } catch (error: any) {
+      throw error.response.data
+    } 
   };
 
   const login = async (payload: ILogin) => {
@@ -56,8 +56,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(user));
         navigate("/calendar", { replace: true });
       }
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.response.data;
     }
   };
 

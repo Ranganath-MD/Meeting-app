@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import {
   EuiButton,
@@ -14,41 +14,21 @@ import {
   EuiSpacer,
 } from "@elastic/eui";
 import { useMeet } from "context";
-import { axios } from "services";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "components/ErrorMessage";
 
 export const CreateMeeting: React.FC = () => {
-  const { state, dispatch, create } = useMeet();
-
+  const { state, create } = useMeet();
+  const [loading, setLoading] = useState<boolean>(false);
   const {
     formState: { errors },
     control,
     handleSubmit,
-    reset
+    reset,
   } = useForm();
 
-  const bringInUsers = useCallback(async () => {
-    try {
-      const users: any = [];
-      const response = await axios.get("/users");
-      response?.data.forEach((data: any) => {
-        users.push({
-          label: data.email,
-          userid: data._id,
-        });
-      });
-      dispatch({ type: "GET_USERS", payload: users });
-    } catch (error) {
-      alert((error as Error)?.message);
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    bringInUsers();
-  }, [bringInUsers]);
-
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    setLoading(true);
     const attendees = data.attendees.map((a: any): Attendee => {
       return {
         userId: a.userid,
@@ -69,7 +49,8 @@ export const CreateMeeting: React.FC = () => {
       },
       attendees,
     };
-    create(payload)
+    await create(payload);
+    setLoading(false);
     reset();
   };
 
@@ -130,7 +111,7 @@ export const CreateMeeting: React.FC = () => {
             </EuiFormRow>
           </EuiFlexItem>
           <EuiFlexItem>
-            <EuiFormRow label="Start date">
+            <EuiFormRow label="Start Time">
               <Controller
                 name="startTime"
                 control={control}
@@ -156,7 +137,7 @@ export const CreateMeeting: React.FC = () => {
             </EuiFormRow>
           </EuiFlexItem>
           <EuiFlexItem>
-            <EuiFormRow label="End date">
+            <EuiFormRow label="End Time">
               <Controller
                 name="endTime"
                 control={control}
@@ -235,7 +216,7 @@ export const CreateMeeting: React.FC = () => {
         <EuiButton
           type="submit"
           color="primary"
-          // isLoading={loading}
+          isLoading={loading}
           style={style.btn}
         >
           Add Meeting
