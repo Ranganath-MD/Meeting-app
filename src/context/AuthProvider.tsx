@@ -1,5 +1,5 @@
 import { navigate } from "@reach/router";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import React, {
   createContext,
   useState,
